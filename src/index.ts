@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
-import { userModel } from "./db";
+import { UserModel } from "./db";
 
 const app = express();
 app.use(express.json());
@@ -14,7 +14,7 @@ app.post('/api/v1/signup', async (req,res) => {
     const password = req.body.password;
 try{
 
-   await  userModel.create({
+   await  UserModel.create({
         username:username,
         password:password
     })
@@ -32,21 +32,25 @@ app.post('/api/v1/signin', async (req,res) => {
 
     const username = req.body.username;
     const password = req.body.password;
-    const existingUser = await UserModel 
-try{
 
-   await  userModel.create({
-        username:username,
-        password:password
+    const existingUser = await UserModel.findOne({
+        username,
+        password
     })
+if(existingUser){
+    const token = jwt.sign({
+        id:existingUser._id
+    },JWT_PASSWORD)
     res.json({
-       message:"user signed up successfully"
+        token
     })
-}catch(e){
-    res.status(411).json({
-        message:"user already exists"
+}else {
+    res.json(403).json({
+        message:"Incorrect credentials"
     })
 }
 })
+
+
 
 app.listen(3000);

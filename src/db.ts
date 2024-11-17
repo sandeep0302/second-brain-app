@@ -1,12 +1,12 @@
-import {model,Schema} from "mongoose";
+import mongoose, {model,Schema} from "mongoose";
 
-mongoose
+mongoose.connect("mongodb+srv://sandeepgsgggg:sandeep123@cluster0.flofr.mongodb.net/")
 
 
-const UserSchema = new Model ({
+const UserSchema = new Schema({
     username:{type:String,unique:true},
     password:String
 })
 
-export const userModel = model("User",UserSchema);
+export const UserModel = model("User",UserSchema);
 
